@@ -3,10 +3,10 @@
 import data from "@/app/data/mock.json";
 import { useEffect, useRef, useState } from "react";
 
-interface ItemType {
+type ItemType = {
   name: string;
   type: string;
-}
+};
 
 export default function Home() {
   const [items, setItems] = useState(data as ItemType[]);
@@ -21,9 +21,8 @@ export default function Home() {
     setTimeout(() => {
       let temp = queueRef.current;
       let itemOut = temp.shift();
-      let tempItems = itemRef.current;
       setQueue([...temp]);
-      if (itemOut) setItems([...tempItems, itemOut]);
+      itemOut && setItems([...itemRef.current, itemOut]);
     }, 5000);
   };
 
