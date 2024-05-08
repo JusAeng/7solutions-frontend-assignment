@@ -10,41 +10,27 @@ interface ItemType {
 
 export default function Home() {
   const [items, setItems] = useState(data as ItemType[]);
-  const [fruits, setFruits] = useState([] as ItemType[]);
-  const [vegetables, setVegetables] = useState([] as ItemType[]);
+  const [queue, setQueue] = useState([] as ItemType[]);
+  const queueRef = useRef([] as ItemType[]);
+  const itemRef = useRef([] as ItemType[]);
 
-  const handleAdd = async (item: ItemType) => {
-    switch (item.type) {
-      case "Fruit":
-        setFruits([...fruits, item]);
-        itemLeaveOut(item);
-        break;
-      case "Vegetable":
-        setVegetables([...vegetables, item]);
-        itemLeaveOut(item);
-        break;
-      default:
-        console.log(item.name);
-    }
-  };
-
-  const itemLeaveOut = (leave: ItemType) => {
-    const filtered = items.filter((item) => item.name !== leave.name);
+  const handleAdd = (added: ItemType) => {
+    const filtered = items.filter((item) => item.name !== added.name);
     setItems(filtered);
+    setQueue([...queue, added]);
+    setTimeout(() => {
+      let temp = queueRef.current;
+      let itemOut = temp.shift();
+      let tempItems = itemRef.current;
+      setQueue([...temp]);
+      if (itemOut) setItems([...tempItems, itemOut]);
+    }, 5000);
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      let outItem = fruits.shift();
-      console.log(outItem);
-    }, 5000);
-  }, [fruits]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      let outItem = vegetables.shift();
-    }, 5000);
-  }, [vegetables]);
+    queueRef.current = queue;
+    itemRef.current = items;
+  }, [queue, items]);
 
   return (
     <main className="grid grid-cols-3 gap-[20px] mt-[20px] px-[100px]">
@@ -60,23 +46,29 @@ export default function Home() {
         ))}
       </section>
       <section className="type-box">
-        <div className="bg-[#cccccc] w-full py-[10px] txt">Fruit</div>
+        <div className="bg-[#cccccc] w-full py-[10px] txt">Fruits</div>
         <div className="px-[10px] w-full flex flex-col gap-[20px] items-center mt-[10px]">
-          {fruits.map((fruit, idx) => (
-            <div className="border py-[10px] txt w-[300px]" key={idx}>
-              {fruit.name}
-            </div>
-          ))}
+          {queue.map(
+            (item, idx) =>
+              item.type == "Fruit" && (
+                <div className="border py-[10px] txt w-[300px]" key={idx}>
+                  {item.name}
+                </div>
+              )
+          )}
         </div>
       </section>
       <section className="type-box">
-        <div className="bg-[#cccccc] w-full py-[10px] txt">Vegetable</div>
+        <div className="bg-[#cccccc] w-full py-[10px] txt">Vegetables</div>
         <div className="px-[10px] w-full flex flex-col gap-[20px] items-center mt-[10px]">
-          {vegetables.map((vegetable, idx) => (
-            <div className="border py-[10px] txt w-[300px]" key={idx}>
-              {vegetable.name}
-            </div>
-          ))}
+          {queue.map(
+            (item, idx) =>
+              item.type == "Vegetable" && (
+                <div className="border py-[10px] txt w-[300px]" key={idx}>
+                  {item.name}
+                </div>
+              )
+          )}
         </div>
       </section>
     </main>
