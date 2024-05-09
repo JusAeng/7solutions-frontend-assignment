@@ -131,7 +131,7 @@ export async function GET() {
   });
   // ave to file and return response
   saveJSONFile(newData);
-  return Response.json(data);
+  return Response.json(newData);
 }
 
 function saveJSONFile(data: any) {
