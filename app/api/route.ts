@@ -97,7 +97,7 @@ export async function GET() {
 
     let summary = newData[userDepartment];
     if (!summary) {
-      let userAgeString = user.age.toString().padStart(2, "0");
+      let userAgeString = user.age.toString();
       newData[userDepartment] = {
         male: user.gender === "male" ? 1 : 0,
         female: user.gender === "female" ? 1 : 0,
@@ -110,7 +110,22 @@ export async function GET() {
         },
       };
     } else {
-      console.log("exist");
+      if (user.gender === "male") {
+        summary.male += 1;
+      } else if (user.gender === "female") {
+        summary.female += 1;
+      }
+      let parts = summary.ageRange.split("-");
+      if (user.age < parseInt(parts[0])) {
+        summary.ageRange = user.age.toString() + "-" + parts[1];
+      } else if (user.age > parseInt(parts[0])) {
+        summary.ageRange = parts[0] + "-" + user.age.toString();
+      }
+
+      if (!summary.hair[user.hair.color]) summary.hair[user.hair.color] = 0;
+      summary.hair[user.hair.color] += 1;
+      summary.addressUser[user.firstName + user.lastName] =
+        user.address.postalCode;
     }
   });
   // ave to file and return response
