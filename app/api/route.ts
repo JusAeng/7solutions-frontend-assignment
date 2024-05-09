@@ -126,6 +126,7 @@ export async function GET() {
       summary.hair[user.hair.color] += 1;
       summary.addressUser[user.firstName + user.lastName] =
         user.address.postalCode;
+      newData[userDepartment] = summary;
     }
   });
   // ave to file and return response
