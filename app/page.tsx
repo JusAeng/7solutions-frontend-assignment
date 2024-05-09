@@ -19,11 +19,18 @@ export default function Home() {
     setItems(filtered);
     setQueue([...queue, added]);
     setTimeout(() => {
-      let temp = queueRef.current;
-      let itemOut = temp.shift();
-      setQueue([...temp]);
-      itemOut && setItems([...itemRef.current, itemOut]);
+      if (queueRef.current.includes(added)) {
+        let filteredQ = queueRef.current.filter((q) => q.name !== added.name);
+        setQueue([...filteredQ]);
+        setItems([...itemRef.current, added]);
+      }
     }, 5000);
+  };
+
+  const handleOut = (out: ItemType) => {
+    let filteredQ = queueRef.current.filter((q) => q.name !== out.name);
+    setQueue([...filteredQ]);
+    setItems([...itemRef.current, out]);
   };
 
   useEffect(() => {
@@ -50,9 +57,13 @@ export default function Home() {
           {queue.map(
             (item, idx) =>
               item.type == "Fruit" && (
-                <div className="border py-[10px] txt w-[300px]" key={idx}>
+                <button
+                  className="border py-[10px] txt w-[300px]"
+                  key={idx}
+                  onClick={() => handleOut(item)}
+                >
                   {item.name}
-                </div>
+                </button>
               )
           )}
         </div>
@@ -63,9 +74,13 @@ export default function Home() {
           {queue.map(
             (item, idx) =>
               item.type == "Vegetable" && (
-                <div className="border py-[10px] txt w-[300px]" key={idx}>
+                <button
+                  className="border py-[10px] txt w-[300px]"
+                  key={idx}
+                  onClick={() => handleOut(item)}
+                >
                   {item.name}
-                </div>
+                </button>
               )
           )}
         </div>
