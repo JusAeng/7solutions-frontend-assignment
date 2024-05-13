@@ -64,3 +64,11 @@ export type UserType = {
     network: string;
   };
 };
+
+export type SummaryType = {
+  male: number;
+  female: number;
+  ageRange: string;
+  hair: Record<string, number>;
+  addressUser: Record<string, string>;
+};
