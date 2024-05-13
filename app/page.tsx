@@ -13,12 +13,14 @@ export default function Home() {
   const [queue, setQueue] = useState([] as ItemType[]);
   const queueRef = useRef([] as ItemType[]);
   const itemRef = useRef([] as ItemType[]);
+  const timeoutsRef = useRef<{ [key: string]: NodeJS.Timeout }>({});
 
   const handleAdd = (added: ItemType) => {
     const filtered = items.filter((item) => item.name !== added.name);
     setItems(filtered);
     setQueue([...queue, added]);
-    setTimeout(() => {
+
+    timeoutsRef.current[added.name] = setTimeout(() => {
       if (queueRef.current.includes(added)) {
         let filteredQ = queueRef.current.filter((q) => q.name !== added.name);
         setQueue([...filteredQ]);
@@ -31,6 +33,11 @@ export default function Home() {
     let filteredQ = queueRef.current.filter((q) => q.name !== out.name);
     setQueue([...filteredQ]);
     setItems([...itemRef.current, out]);
+
+    const timeoutId = timeoutsRef.current[out.name];
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
   };
 
   useEffect(() => {
