@@ -136,7 +136,7 @@ export async function GET() {
 
 function saveJSONFile(data: any) {
   const jsonData: string = JSON.stringify(data);
-  fs.writeFile("./app/api/new-format.json", jsonData, "utf8", (err) => {
+  fs.writeFile("./app/data/new-format.json", jsonData, "utf8", (err) => {
     if (err) {
       console.error("Error writing JSON file:", err);
       return;
