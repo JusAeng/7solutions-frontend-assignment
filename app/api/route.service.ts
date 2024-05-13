@@ -9,6 +9,9 @@ export function formattingNewJson(
   data: IData,
   newData: Record<string, SummaryType>
 ) {
+  if (!data.users) {
+    return;
+  }
   data.users.map((user, idx) => {
     let userDepartment = user.company.department;
 
